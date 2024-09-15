@@ -16,14 +16,6 @@ function App() {
 
   return (
     <>
-      <NavigationMenuItem>
-        <Link href="/docs" legacyBehavior passHref>
-          <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-            Documentation
-          </NavigationMenuLink>
-        </Link>
-      </NavigationMenuItem>
-
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
