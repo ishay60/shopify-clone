@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import "./ProductCard.css"; // Import the CSS file
+import "./ProductCard.css";
 
 interface Product {
   id: number;

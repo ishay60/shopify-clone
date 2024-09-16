@@ -1,5 +1,6 @@
 import * as React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Box } from "@mui/material";
 import Navbar from "./components/Navbar";
 import ProductList from "./components/ProductList";
 import ProductDetails from "./components/ProductDetails";
@@ -17,12 +18,19 @@ const App: React.FC = () => {
   return (
     <CartProvider>
       <Router>
-        <div className="min-h-screen flex flex-col">
+        <Box
+          sx={{
+            minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "#f0f2f5", // Modern background color
+          }}
+        >
           {/* Navbar */}
           <Navbar onCartClick={toggleCart} isCartOpen={isCartOpen} />
 
           {/* Main Content */}
-          <div className="flex-grow pt-16">
+          <Box sx={{ flexGrow: 1, pt: 8 }}>
             <Routes>
               <Route path="/" element={<ProductList />} />
               <Route path="/products" element={<ProductList />} />
@@ -30,14 +38,14 @@ const App: React.FC = () => {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/cart" element={<CartPage />} />
             </Routes>
-          </div>
+          </Box>
 
           {/* Footer */}
           <Footer />
 
           {/* Cart Popup */}
           <CartPopup open={isCartOpen} onClose={toggleCart} />
-        </div>
+        </Box>
       </Router>
     </CartProvider>
   );

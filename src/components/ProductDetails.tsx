@@ -69,6 +69,7 @@ const ProductDetails: React.FC = () => {
         justifyContent: "center",
         alignItems: "center",
         minHeight: "100vh",
+        margin: "0 auto",
       }}
     >
       <Box
@@ -82,6 +83,8 @@ const ProductDetails: React.FC = () => {
           boxShadow: 3,
           borderRadius: 2,
           backgroundColor: "white",
+          justifyContent: "center",
+          justifyItems: "center",
         }}
       >
         {product.image && (

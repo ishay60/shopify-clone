@@ -1,22 +1,17 @@
 import * as React from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
+  Box,
   Typography,
   IconButton,
+  Button,
   List,
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-  Box,
-  Grid,
 } from "@mui/material";
-import { useCart } from "../context/CartContext";
 import { Add, Remove, Delete } from "@mui/icons-material";
-import "./CartPopup.css"; // Import the CSS file
+import { useCart } from "../context/CartContext";
+import "./CartPopup.css";
 
 const CartPopup: React.FC<{ open: boolean; onClose: () => void }> = ({
   open,
@@ -25,78 +20,64 @@ const CartPopup: React.FC<{ open: boolean; onClose: () => void }> = ({
   const { cart, removeFromCart, updateQuantity, totalItems, totalPrice } =
     useCart();
 
+  if (!open) return null;
+
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Your Cart</DialogTitle>
-      <DialogContent>
+    <>
+      <div className="cart-overlay" onClick={onClose}></div>
+      <Box className="cart-popup">
+        <Typography variant="h6" gutterBottom>
+          Your Cart
+        </Typography>
         {cart.length === 0 ? (
           <Typography>Your cart is empty.</Typography>
         ) : (
           <List>
             {cart.map((item) => (
-              <ListItem key={item.id} sx={{ mb: 2 }}>
-                <Grid container alignItems="center" spacing={2}>
-                  <Grid item xs={8}>
-                    <ListItemText
-                      primary={item.title}
-                      secondary={`Price: $${item.price}`}
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="flex-end"
-                    >
-                      <IconButton
-                        edge="end"
-                        aria-label="remove"
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity - 1)
-                        }
-                        sx={{ mx: 1 }}
-                      >
-                        <Remove />
-                      </IconButton>
-                      <Typography>{item.quantity}</Typography>
-                      <IconButton
-                        edge="end"
-                        aria-label="add"
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1)
-                        }
-                        sx={{ mx: 1 }}
-                      >
-                        <Add />
-                      </IconButton>
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => removeFromCart(item.id)}
-                        sx={{ mx: 1 }}
-                      >
-                        <Delete />
-                      </IconButton>
-                    </Box>
-                  </Grid>
-                </Grid>
+              <ListItem key={item.id}>
+                <ListItemText
+                  primary={item.title}
+                  secondary={`Price: $${item.price}`}
+                />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="end"
+                    aria-label="remove"
+                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                  >
+                    <Remove />
+                  </IconButton>
+                  <Typography>{item.quantity}</Typography>
+                  <IconButton
+                    edge="end"
+                    aria-label="add"
+                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  >
+                    <Add />
+                  </IconButton>
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => removeFromCart(item.id)}
+                  >
+                    <Delete />
+                  </IconButton>
+                </ListItemSecondaryAction>
               </ListItem>
             ))}
           </List>
         )}
-        <Box mt={3}>
+        <Box sx={{ mt: 3, textAlign: "center" }}>
           <Typography variant="h6">Total Items: {totalItems}</Typography>
           <Typography variant="h6">
             Total Price: ${totalPrice.toFixed(2)}
           </Typography>
+          <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+            Checkout
+          </Button>
         </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
+      </Box>
+    </>
   );
 };
 
