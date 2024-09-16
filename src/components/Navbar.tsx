@@ -1,12 +1,19 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import CartPopup from "./CartPopup";
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<{ onCartClick: () => void; isCartOpen: boolean }> = ({
+  onCartClick,
+  isCartOpen,
+}) => {
+  const { cart } = useCart();
+
   return (
-    <nav className="bg-blue-600 p-4 shadow-md">
+    <nav className="fixed top-0 left-0 w-full bg-blue-600 p-4 shadow-md z-50">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white text-2xl font-bold">My Store</div>
-        <ul className="flex space-x-6">
+        <ul className="flex space-x-6 items-center relative">
           <li>
             <Link to="/" className="text-white hover:text-gray-300">
               Home
@@ -17,13 +24,22 @@ const Navbar: React.FC = () => {
               Products
             </Link>
           </li>
-          <li>
-            <Link to="/contact" className="text-white hover:text-gray-300">
-              Contact
-            </Link>
+          <li className="relative">
+            <button
+              onClick={onCartClick}
+              className="text-white hover:text-gray-300"
+            >
+              🛒 Cart
+            </button>
+            {cart.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">
+                {cart.length}
+              </span>
+            )}
           </li>
         </ul>
       </div>
+      {isCartOpen && <CartPopup onClose={onCartClick} />}
     </nav>
   );
 };

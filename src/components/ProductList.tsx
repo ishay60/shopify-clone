@@ -1,5 +1,6 @@
 import * as React from "react";
 import ProductCard from "./ProductCard";
+import "./ProductList.css"; // Import the CSS file
 
 interface Product {
   id: number;
@@ -7,14 +8,14 @@ interface Product {
   description: string;
   price: number;
   images: string[];
-  category: string;
+  category: string; // Add category to the Product interface
 }
 
 const ProductList: React.FC = () => {
   const [products, setProducts] = React.useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = React.useState<Product[]>([]);
   const [loading, setLoading] = React.useState(true);
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [selectedCategory, setSelectedCategory] = React.useState("All");
 
   const fetchProducts = async () => {
     try {
@@ -26,9 +27,9 @@ const ProductList: React.FC = () => {
       const mappedData = data.map((product: any) => ({
         ...product,
         images: [product.image],
+        category: product.category, // Map category from the API response
       }));
       setProducts(mappedData);
-      setFilteredProducts(mappedData);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching product data:", error);
@@ -40,84 +41,64 @@ const ProductList: React.FC = () => {
     fetchProducts();
   }, []);
 
-  const [categories, setCategories] = React.useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = React.useState("");
-
-  const fetchCategories = async () => {
-    const response = await fetch(
-      "https://fakestoreapi.com/products/categories"
-    );
-    const data = await response.json();
-    setCategories(data);
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
   };
 
-  React.useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    if (category === "") {
-      setFilteredProducts(products);
-    } else {
-      const filtered = products.filter(
-        (product) => product.category === category
-      );
-      setFilteredProducts(filtered);
-    }
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSelectedCategory(event.target.value);
   };
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-    const filtered = products.filter(
-      (product) =>
-        product.title
-          .toLowerCase()
-          .includes(event.target.value.toLowerCase()) ||
-        product.description
-          .toLowerCase()
-          .includes(event.target.value.toLowerCase())
-    );
-    setFilteredProducts(filtered);
-  };
+  const filteredProducts = products.filter((product) => {
+    const matchesSearchQuery = product.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "All" || product.category === selectedCategory;
+    return matchesSearchQuery && matchesCategory;
+  });
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <>
-      <div className="flex justify-center mb-6">
+    <div>
+      <div className="search-sort-container mb-4">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="search-input p-2 border rounded"
+        />
         <select
           value={selectedCategory}
-          onChange={(e) => handleCategoryChange(e.target.value)}
-          className="p-2 border rounded-lg shadow"
+          onChange={handleCategoryChange}
+          className="category-select p-2 border rounded ml-2"
         >
-          <option value="">All Categories</option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
+          <option value="All">All Categories</option>
+          {/* Add more categories as needed */}
+          <option value="electronics">Electronics</option>
+          <option value="jewelery">Jewelery</option>
+          <option value="men's clothing">Men's Clothing</option>
+          <option value="women's clothing">Women's Clothing</option>
         </select>
       </div>
-      <div className="container mx-auto">
-        <div className="flex justify-center mb-6">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="Search for products..."
-            className="w-1/2 p-2 border rounded-lg shadow"
-          />
+      {filteredProducts.length === 0 ? (
+        <div className="no-results">
+          No results found. Please refine your search.
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
+      ) : (
+        <div className="product-list">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
-      </div>
-    </>
+      )}
+    </div>
   );
 };
 
