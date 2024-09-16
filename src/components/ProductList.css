@@ -1,17 +1,4 @@
-/* Add horizontal scrolling to the product list */
-.product-list {
-  display: flex;
-  overflow-x: auto;
-  padding: 1rem;
-  gap: 1rem;
-}
-
-/* Ensure the product card images have a consistent size */
-.product-card img {
-  width: 150px; /* Adjust the width as needed */
-  height: 150px; /* Adjust the height as needed */
-  object-fit: cover;
-}
+/* src/components/ProductList.css */
 
 .search-sort-container {
   display: flex;
@@ -20,19 +7,12 @@
   margin-bottom: 1rem;
 }
 
-/* Add styles for the search input */
 .search-input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
   width: 200px;
 }
 
-/* Add styles for the category select */
 .category-select {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
+  width: 200px;
   margin-left: 0.5rem;
 }
 
@@ -41,4 +21,11 @@
   font-size: 1.25rem;
   color: #555;
   margin-top: 2rem;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
 }

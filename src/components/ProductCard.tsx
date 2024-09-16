@@ -1,4 +1,12 @@
 import * as React from "react";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Button,
+  Box,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import "./ProductCard.css"; // Import the CSS file
@@ -11,36 +19,42 @@ interface Product {
   images: string[];
 }
 
-interface ProductCardProps {
-  product: Product;
-}
-
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const { addToCart } = useCart();
 
   return (
-    <div className="product-card border rounded-lg p-4 shadow-lg bg-white transform hover:scale-105 transition-transform duration-300">
-      <Link to={`/product/${product.id}`}>
-        <div className="w-full h-64 flex items-center justify-center overflow-hidden">
-          <img
-            src={product.images[0]}
-            alt={product.title}
-            className="object-contain max-h-full max-w-full"
-          />
-        </div>
-        <h2 className="text-lg font-semibold mt-4 text-center">
-          {product.title}
-        </h2>
-        <p className="text-gray-500 text-sm text-center mt-2">
-          {product.description.slice(0, 50)}...
-        </p>
-        <p className="text-green-500 font-bold text-xl mt-4 text-center">
-          ${product.price}
-        </p>
+    <Card sx={{ maxWidth: 345, m: 2, boxShadow: 3, borderRadius: 2 }}>
+      <Link
+        to={`/product/${product.id}`}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <CardMedia
+          component="img"
+          height="200"
+          image={product.images[0]}
+          alt={product.title}
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div" align="center">
+            {product.title}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" align="center">
+            {product.description.slice(0, 50)}...
+          </Typography>
+          <Typography
+            variant="h6"
+            color="textPrimary"
+            align="center"
+            sx={{ mt: 2 }}
+          >
+            ${product.price}
+          </Typography>
+        </CardContent>
       </Link>
-      <div className="flex justify-center mt-4">
-        <button
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors duration-200"
+      <Box display="flex" justifyContent="center" sx={{ mb: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
           onClick={() =>
             addToCart({
               id: product.id,
@@ -51,9 +65,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           }
         >
           Add to Cart
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Card>
   );
 };
 

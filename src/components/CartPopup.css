@@ -28,3 +28,13 @@
 .cart-popup .flex.items-center > button {
   margin: 0 5px;
 }
+
+/* Add spacing between list items */
+.cart-popup .MuiListItem-root {
+  margin-bottom: 16px;
+}
+
+/* Add spacing between buttons */
+.cart-popup .MuiIconButton-root {
+  margin: 0 8px;
+}

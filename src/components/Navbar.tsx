@@ -12,7 +12,6 @@ const Navbar: React.FC<{ onCartClick: () => void; isCartOpen: boolean }> = ({
   return (
     <nav className="fixed top-0 left-0 w-full bg-blue-600 p-4 shadow-md z-50">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="text-white text-2xl font-bold">My Store</div>
         <ul className="flex space-x-6 items-center relative">
           <li>
             <Link to="/" className="text-white hover:text-gray-300">
@@ -22,6 +21,16 @@ const Navbar: React.FC<{ onCartClick: () => void; isCartOpen: boolean }> = ({
           <li>
             <Link to="/products" className="text-white hover:text-gray-300">
               Products
+            </Link>
+          </li>
+          <li>
+            <Link to="/contact" className="text-white hover:text-gray-300">
+              Contact
+            </Link>
+          </li>
+          <li>
+            <Link to="/cart" className="text-white hover:text-gray-300">
+              Cart
             </Link>
           </li>
           <li className="relative">
@@ -39,7 +48,7 @@ const Navbar: React.FC<{ onCartClick: () => void; isCartOpen: boolean }> = ({
           </li>
         </ul>
       </div>
-      {isCartOpen && <CartPopup onClose={onCartClick} />}
+      {isCartOpen && <CartPopup onClose={onCartClick} open={false} />}
     </nav>
   );
 };

@@ -1,5 +1,17 @@
 import * as React from "react";
-import ProductCard from "./ProductCard";
+import {
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  CircularProgress,
+  Grid,
+  Typography,
+  Box,
+} from "@mui/material";
+import { SelectChangeEvent } from "@mui/material";
+import ProductCard from "./ProductCard"; // Import the ProductCard component
 import "./ProductList.css"; // Import the CSS file
 
 interface Product {
@@ -8,7 +20,7 @@ interface Product {
   description: string;
   price: number;
   images: string[];
-  category: string; // Add category to the Product interface
+  category: string;
 }
 
 const ProductList: React.FC = () => {
@@ -27,7 +39,7 @@ const ProductList: React.FC = () => {
       const mappedData = data.map((product: any) => ({
         ...product,
         images: [product.image],
-        category: product.category, // Map category from the API response
+        category: product.category,
       }));
       setProducts(mappedData);
       setLoading(false);
@@ -45,9 +57,7 @@ const ProductList: React.FC = () => {
     setSearchQuery(event.target.value);
   };
 
-  const handleCategoryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleCategoryChange = (event: SelectChangeEvent<string>) => {
     setSelectedCategory(event.target.value);
   };
 
@@ -61,44 +71,58 @@ const ProductList: React.FC = () => {
   });
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
-    <div>
-      <div className="search-sort-container mb-4">
-        <input
-          type="text"
-          placeholder="Search products..."
+    <Box p={3}>
+      <Box display="flex" justifyContent="center" mb={4}>
+        <TextField
+          label="Search products..."
           value={searchQuery}
           onChange={handleSearchChange}
-          className="search-input p-2 border rounded"
+          variant="outlined"
+          className="search-input"
+          sx={{ mr: 2 }}
         />
-        <select
-          value={selectedCategory}
-          onChange={handleCategoryChange}
-          className="category-select p-2 border rounded ml-2"
-        >
-          <option value="All">All Categories</option>
-          {/* Add more categories as needed */}
-          <option value="electronics">Electronics</option>
-          <option value="jewelery">Jewelery</option>
-          <option value="men's clothing">Men's Clothing</option>
-          <option value="women's clothing">Women's Clothing</option>
-        </select>
-      </div>
+        <FormControl variant="outlined" className="category-select">
+          <InputLabel>Category</InputLabel>
+          <Select
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+            label="Category"
+          >
+            <MenuItem value="All">All Categories</MenuItem>
+            <MenuItem value="electronics">Electronics</MenuItem>
+            <MenuItem value="jewelery">Jewelery</MenuItem>
+            <MenuItem value="men's clothing">Men's Clothing</MenuItem>
+            <MenuItem value="women's clothing">Women's Clothing</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
       {filteredProducts.length === 0 ? (
-        <div className="no-results">
+        <Typography variant="h6" align="center">
           No results found. Please refine your search.
-        </div>
+        </Typography>
       ) : (
-        <div className="product-list">
+        <Grid container spacing={3} justifyContent="center">
           {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
+              <ProductCard product={product} />
+            </Grid>
           ))}
-        </div>
+        </Grid>
       )}
-    </div>
+    </Box>
   );
 };
 
