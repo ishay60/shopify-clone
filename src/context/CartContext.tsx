@@ -18,7 +18,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [cart, setCart] = React.useState<Product[]>(() => {
     const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : [];
+    const parsedCart = savedCart ? JSON.parse(savedCart) : [];
+    const currentTime = new Date().getTime();
+    const validCart = parsedCart.filter(
+      (item: Product & { addedAt: number }) => {
+        return currentTime - item.addedAt < 3600000; // 1 hour in milliseconds
+      }
+    );
+    return validCart.map((item: Product & { addedAt: number }) => ({
+      ...item,
+      addedAt: currentTime - (3600000 - (currentTime - item.addedAt)), // Adjust remaining time
+    }));
   });
 
   React.useEffect(() => {
