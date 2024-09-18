@@ -12,36 +12,30 @@ import {
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
 import ProductCard from "./ProductCard"; // Import the ProductCard component
-import "./ProductList.css"; // Import the CSS file
-
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  images: string[];
-  category: string;
-}
+import Pagination from "./Pagination"; // Import the Pagination component
+import { Product } from "../types/Product"; // Import the Product type
 
 const ProductList: React.FC = () => {
   const [products, setProducts] = React.useState<Product[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState("All");
+  const [page, setPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
 
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        "https://fakestoreapi.com/products?limit=20"
-      );
+      const response = await fetch("https://fakestoreapi.com/products");
       const data = await response.json();
       const mappedData = data.map((product: any) => ({
         ...product,
+        quantity: 1,
         images: [product.image],
         category: product.category,
       }));
       setProducts(mappedData);
+      setTotalPages(Math.ceil(mappedData.length / 4)); // 4 products per page
       setLoading(false);
     } catch (error) {
       console.error("Error fetching product data:", error);
@@ -61,6 +55,13 @@ const ProductList: React.FC = () => {
     setSelectedCategory(event.target.value);
   };
 
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
+
   const filteredProducts = products.filter((product) => {
     const matchesSearchQuery = product.title
       .toLowerCase()
@@ -70,13 +71,17 @@ const ProductList: React.FC = () => {
     return matchesSearchQuery && matchesCategory;
   });
 
+  const paginatedProducts = filteredProducts.slice((page - 1) * 4, page * 4);
+
   if (loading) {
     return (
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
       >
         <CircularProgress />
       </Box>
@@ -84,17 +89,16 @@ const ProductList: React.FC = () => {
   }
 
   return (
-    <Box p={3}>
-      <Box display="flex" justifyContent="center" mb={4}>
+    <Box sx={{ p: 3, width: "100%", margin: "0 auto" }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
         <TextField
           label="Search products..."
           value={searchQuery}
           onChange={handleSearchChange}
           variant="outlined"
-          className="search-input"
           sx={{ mr: 2 }}
         />
-        <FormControl variant="outlined" className="category-select">
+        <FormControl variant="outlined" sx={{ minWidth: 120 }}>
           <InputLabel>Category</InputLabel>
           <Select
             value={selectedCategory}
@@ -109,18 +113,36 @@ const ProductList: React.FC = () => {
           </Select>
         </FormControl>
       </Box>
-      {filteredProducts.length === 0 ? (
+      {paginatedProducts.length === 0 ? (
         <Typography variant="h6" align="center">
           No results found. Please refine your search.
         </Typography>
       ) : (
-        <Grid container spacing={3} justifyContent="center">
-          {filteredProducts.map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
-              <ProductCard product={product} />
-            </Grid>
-          ))}
-        </Grid>
+        <>
+          <Grid container spacing={3} justifyContent="center">
+            {paginatedProducts.map((product) => (
+              <Grid
+                item
+                component="div"
+                key={product.id}
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                sx={{}}
+              >
+                <ProductCard product={product} />
+              </Grid>
+            ))}
+          </Grid>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+            />
+          </Box>
+        </>
       )}
     </Box>
   );

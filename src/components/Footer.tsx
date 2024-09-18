@@ -1,14 +1,22 @@
 import * as React from "react";
+import { Box, Container, Typography } from "@mui/material";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-800 p-4 mt-8">
-      <div className="container mx-auto text-center">
-        <p className="text-gray-400">
+    <Box
+      component="footer"
+      sx={{
+        backgroundColor: "gray.800",
+        p: 4,
+        mt: 8,
+      }}
+    >
+      <Container sx={{ textAlign: "center" }}>
+        <Typography sx={{ color: "gray.400" }}>
           &copy; {new Date().getFullYear()} My Store. All rights reserved.
-        </p>
-      </div>
-    </footer>
+        </Typography>
+      </Container>
+    </Box>
   );
 };
 

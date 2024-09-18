@@ -8,14 +8,7 @@ import {
   Container,
 } from "@mui/material";
 import { useCart } from "../context/CartContext";
-
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  image: string; // Updated to match the API response
-}
+import { Product } from "../types/Product";
 
 const ProductDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,7 +22,11 @@ const ProductDetails: React.FC = () => {
       const response = await fetch(`https://fakestoreapi.com/products/${id}`);
       const data = await response.json();
       console.log("Fetched product data:", data); // Debug statement
-      setProduct(data);
+      setProduct({
+        ...data,
+        quantity: 1,
+        images: [data.image],
+      });
       setLoading(false);
     } catch (error) {
       console.error("Error fetching product data:", error);
@@ -44,10 +41,12 @@ const ProductDetails: React.FC = () => {
   if (loading) {
     return (
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
       >
         <CircularProgress />
       </Box>
@@ -70,6 +69,7 @@ const ProductDetails: React.FC = () => {
         alignItems: "center",
         minHeight: "100vh",
         margin: "0 auto",
+        width: "100%",
       }}
     >
       <Box
@@ -77,7 +77,7 @@ const ProductDetails: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          maxWidth: 600,
+          maxWidth: "50%",
           width: "100%",
           padding: 3,
           boxShadow: 3,
@@ -87,11 +87,16 @@ const ProductDetails: React.FC = () => {
           justifyItems: "center",
         }}
       >
-        {product.image && (
-          <img
-            src={product.image}
+        {product.images[0] && (
+          <Box
+            component="img"
+            src={product.images[0]}
             alt={product.title}
-            style={{ width: "100%", height: "auto", marginBottom: "1rem" }}
+            sx={{
+              width: "100%",
+              height: "auto",
+              marginBottom: "1rem",
+            }}
           />
         )}
         <Typography
@@ -121,14 +126,7 @@ const ProductDetails: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() =>
-            addToCart({
-              id: product.id,
-              title: product.title,
-              price: product.price,
-              quantity: 1,
-            })
-          }
+          onClick={() => addToCart(product)}
         >
           Add to Cart
         </Button>

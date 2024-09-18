@@ -9,6 +9,7 @@ import CartPopup from "./components/CartPopup";
 import { CartProvider } from "./context/CartContext";
 import ContactPage from "./pages/ContactPage";
 import CartPage from "./pages/CartPage";
+import "./App.css";
 
 const App: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = React.useState(false);
@@ -22,8 +23,9 @@ const App: React.FC = () => {
           sx={{
             minHeight: "100vh",
             display: "flex",
+            width: "100%",
             flexDirection: "column",
-            backgroundColor: "#f0f2f5", // Modern background color
+            backgroundColor: "#f0f2f5",
           }}
         >
           {/* Navbar */}

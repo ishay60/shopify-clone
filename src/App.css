@@ -6,65 +6,9 @@
   display: grid;
   margin: 0 auto;
   padding: 2rem;
+  width: auto;
   text-align: center;
   background-color: #f0f2f5; /* Modern background color */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-@layer base {
-  :root {
-    --radius: 0.5rem;
-  }
-}
-
-/* Add horizontal scrolling to the product list */
-.product-list {
-  display: flex;
-  overflow-x: auto;
-  padding: 1rem;
-  gap: 1rem;
-}
-
-/* Ensure the product card images have a consistent size */
-.product-card img {
-  width: 150px; /* Adjust the width as needed */
-  height: 150px; /* Adjust the height as needed */
-  object-fit: cover;
-}

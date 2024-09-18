@@ -1,15 +1,10 @@
+import { Product } from "@/components/ProductCard";
 import * as React from "react";
 
-interface CartItem {
-  id: number;
-  title: string;
-  price: number;
-  quantity: number;
-}
-
+//
 interface CartContextType {
-  cart: CartItem[];
-  addToCart: (product: CartItem) => void;
+  cart: Product[];
+  addToCart: (product: Product) => void;
   removeFromCart: (id: number) => void;
   updateQuantity: (id: number, quantity: number) => void;
   totalItems: number;
@@ -21,7 +16,7 @@ const CartContext = React.createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [cart, setCart] = React.useState<CartItem[]>(() => {
+  const [cart, setCart] = React.useState<Product[]>(() => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
@@ -30,7 +25,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("cart", JSON.stringify(cart)); // Save cart to localStorage on every update
   }, [cart]);
 
-  const addToCart = (product: CartItem) => {
+  const addToCart = (product: Product) => {
     setCart((prevCart) => {
       const existingProduct = prevCart.find((item) => item.id === product.id);
       if (existingProduct) {

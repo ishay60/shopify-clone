@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Add, Remove, Delete } from "@mui/icons-material";
 import { useCart } from "../context/CartContext";
-import "./CartPopup.css";
+import { Link } from "react-router-dom";
 
 const CartPopup: React.FC<{ open: boolean; onClose: () => void }> = ({
   open,
@@ -24,8 +24,33 @@ const CartPopup: React.FC<{ open: boolean; onClose: () => void }> = ({
 
   return (
     <>
-      <div className="cart-overlay" onClick={onClose}></div>
-      <Box className="cart-popup">
+      <Box
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          zIndex: 999,
+        }}
+        onClick={onClose}
+      ></Box>
+      <Box
+        sx={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "100%",
+          maxWidth: 600,
+          backgroundColor: "white",
+          boxShadow: 24,
+          p: 4,
+          zIndex: 1000,
+          borderRadius: 2,
+        }}
+      >
         <Typography variant="h6" gutterBottom>
           Your Cart
         </Typography>
@@ -36,32 +61,54 @@ const CartPopup: React.FC<{ open: boolean; onClose: () => void }> = ({
             {cart.map((item) => (
               <ListItem key={item.id}>
                 <ListItemText
-                  primary={item.title}
+                  primary={
+                    <Link
+                      to={`/product/${item.id}`}
+                      style={{
+                        textDecoration: "none",
+                        color: "inherit",
+                        display: "block",
+                        whiteSpace: "nowrap",
+                        overflow: "clip",
+                        textOverflow: "ellipsis",
+                      }}
+                      onClick={onClose}
+                    >
+                      {item.title}
+                    </Link>
+                  }
                   secondary={`Price: $${item.price}`}
                 />
                 <ListItemSecondaryAction>
-                  <IconButton
-                    edge="end"
-                    aria-label="remove"
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  >
-                    <Remove />
-                  </IconButton>
-                  <Typography>{item.quantity}</Typography>
-                  <IconButton
-                    edge="end"
-                    aria-label="add"
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                  >
-                    <Add />
-                  </IconButton>
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => removeFromCart(item.id)}
-                  >
-                    <Delete />
-                  </IconButton>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <IconButton
+                      edge="end"
+                      aria-label="remove"
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    >
+                      <Remove />
+                    </IconButton>
+                    <Typography
+                      sx={{ mx: 2, minWidth: 30, textAlign: "center" }}
+                    >
+                      {item.quantity}
+                    </Typography>
+                    <IconButton
+                      edge="end"
+                      aria-label="add"
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    >
+                      <Add />
+                    </IconButton>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => removeFromCart(item.id)}
+                      sx={{ ml: 2 }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Box>
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
