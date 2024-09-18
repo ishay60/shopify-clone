@@ -6,10 +6,10 @@ import {
   FormControl,
   InputLabel,
   CircularProgress,
-  Grid,
   Typography,
   Box,
 } from "@mui/material";
+import { Grid2 } from "@mui/material"; // Import Grid2 component
 import { SelectChangeEvent } from "@mui/material";
 import ProductCard from "./ProductCard"; // Import the ProductCard component
 import Pagination from "./Pagination"; // Import the Pagination component
@@ -49,10 +49,12 @@ const ProductList: React.FC = () => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
+    setPage(1); // Reset to first page on search change
   };
 
   const handleCategoryChange = (event: SelectChangeEvent<string>) => {
     setSelectedCategory(event.target.value);
+    setPage(1); // Reset to first page on category change
   };
 
   const handlePageChange = (
@@ -70,6 +72,10 @@ const ProductList: React.FC = () => {
       selectedCategory === "All" || product.category === selectedCategory;
     return matchesSearchQuery && matchesCategory;
   });
+
+  React.useEffect(() => {
+    setTotalPages(Math.ceil(filteredProducts.length / 4));
+  }, [filteredProducts]);
 
   const paginatedProducts = filteredProducts.slice((page - 1) * 4, page * 4);
 
@@ -119,22 +125,22 @@ const ProductList: React.FC = () => {
         </Typography>
       ) : (
         <>
-          <Grid container spacing={3} justifyContent="center">
+          <Grid2 container spacing={3} justifyContent="center">
             {paginatedProducts.map((product) => (
-              <Grid
-                item
-                component="div"
+              <Grid2
                 key={product.id}
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                sx={{}}
+                sx={{
+                  xs: 12,
+                  sm: 6,
+                  md: 4,
+                  lg: 3,
+                  className: "flex justify-center",
+                }}
               >
                 <ProductCard product={product} />
-              </Grid>
+              </Grid2>
             ))}
-          </Grid>
+          </Grid2>
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             <Pagination
               count={totalPages}
