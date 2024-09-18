@@ -1,4 +1,4 @@
-import { Product } from "@/components/ProductCard";
+import { Product } from "../types/Product";
 import * as React from "react";
 
 //
